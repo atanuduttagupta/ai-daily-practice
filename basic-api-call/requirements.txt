@@ -2,3 +2,4 @@ python-dotenv
 google
 google-genai
 streamlit
+groq

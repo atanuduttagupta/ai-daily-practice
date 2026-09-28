@@ -1,9 +1,16 @@
 import streamlit as st
-from main import ask_gemini
+from main import (
+    ask_llm,
+    LLMAuthenticationError,
+    LLMConfigurationError,
+    LLMQuotaError,
+    LLMRequestError,
+    LLMUnavailableError,
+)
 
-st.title("Basic Gemini API Call")
+st.title("Basic LLM API Call")
 
-st.write("Ask a question and get a response from Google Gemini.")
+st.write("Ask a question and get a response from LLM.")
 
 
 question = st.text_area(
@@ -19,12 +26,30 @@ token_length = st.slider(
     step=100
 )
 
-if st.button("Ask Gemini"):
+if st.button("Ask LLM"):
     if not question.strip():
         st.warning("Please enter a question here...")
     else:
-        with st.spinner("Gemini is thinking..."):
-            answer = ask_gemini(question, token_length)
 
-        st.subheader("Gemini's Answer")
-        st.write(answer)
+        try:
+
+            with st.spinner("LLM is thinking..."):
+                answer = ask_llm(question, token_length)
+
+            st.subheader("LLM's Answer")
+            st.write(answer)
+
+        except LLMQuotaError as error:
+            st.warning(str(error))
+
+        except LLMUnavailableError as error:
+            st.warning(str(error))
+
+        except LLMAuthenticationError as error:
+            st.error(str(error))
+
+        except LLMConfigurationError as error:
+            st.error(str(error))
+
+        except LLMRequestError as error:
+            st.warning(str(error))
