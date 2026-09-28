@@ -25,9 +25,9 @@ from google.genai import types
 load_dotenv()
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-MODEL = os.environ.get("MODEL")
+MODEL = os.environ.get("MODEL", "gemini-3.5-flash")
 
-def ask_gemini(question: str) -> str:
+def ask_gemini(question: str, max_output_tokens: int = 1000) -> str:
     """Send one question to Gemini and return the text of the reply."""
     if not GEMINI_API_KEY:
         print("ERROR: Set the API Key first")
@@ -38,7 +38,7 @@ def ask_gemini(question: str) -> str:
     response = client.models.generate_content(
         model=MODEL,
         contents=question,
-        config=types.GenerateContentConfig(max_output_tokens=1000)
+        config=types.GenerateContentConfig(max_output_tokens=max_output_tokens)
     )
 
     return response.text
