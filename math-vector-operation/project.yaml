@@ -52,7 +52,7 @@ tags:
   - machine-learning-foundations
 
 artifacts:
-  github: ""
+  github: "https://github.com/atanuduttagupta/ai-daily-practice/tree/main/math-vector-operation"
 
 experiences:
   - id: "interactive-streamlit"
@@ -64,6 +64,6 @@ experiences:
       requested: true
       mode: "local_or_external_demo"
       provider: "Streamlit"
-      url: ""
+      url: "https://ai-daily-practice-math-vector-operation.streamlit.app/"
 
 relationships: []
