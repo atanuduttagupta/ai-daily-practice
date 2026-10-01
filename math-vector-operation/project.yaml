@@ -1,0 +1,69 @@
+schema_version: "1.0"
+
+id: "daily-math-project"
+
+title: "Vectors & Vector Operations"
+
+domain: "Mathematics & Foundations"
+
+topics:
+  - Linear Algebra
+  - Vectors
+  - Vector Addition
+  - Scalar Multiplication
+  - Dot Product
+  - Vector Norm
+  - Angle Between Vectors
+  - NumPy
+
+project_type: "mathematics"
+
+difficulty: "beginner"
+
+status: "completed"
+
+technologies:
+  - Python
+  - NumPy
+  - Streamlit
+
+capabilities:
+  - COMPUTE
+
+learning_outcomes:
+  - Understand vectors through basic vector operations.
+  - Implement vector addition using NumPy.
+  - Understand scalar multiplication and its effect on vector magnitude and direction.
+  - Implement a dot product manually using element-wise multiplication and summation.
+  - Understand the relationship between the dot product and the angle between two vectors.
+  - Implement the Euclidean norm manually.
+  - Compare manually calculated results with NumPy implementations.
+  - Understand why floating-point values may require numerical tolerance when validating calculations.
+
+tags:
+  - mathematics
+  - linear-algebra
+  - vectors
+  - vector-operations
+  - dot-product
+  - norm
+  - scalar-multiplication
+  - numpy
+  - machine-learning-foundations
+
+artifacts:
+  github: ""
+
+experiences:
+  - id: "interactive-streamlit"
+    title: "Vector Operations Explorer"
+    description: "Enter two vectors and a scalar to calculate vector addition, scalar multiplication, dot product, norm, and the angle between vectors."
+    capabilities:
+      - COMPUTE
+    execution:
+      requested: true
+      mode: "local_or_external_demo"
+      provider: "Streamlit"
+      url: ""
+
+relationships: []
