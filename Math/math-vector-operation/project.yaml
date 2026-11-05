@@ -1,6 +1,6 @@
 schema_version: "1.0"
 
-id: "daily-math-project"
+id: "math-001"
 
 title: "Vectors & Vector Operations"
 
@@ -16,7 +16,7 @@ topics:
   - Angle Between Vectors
   - NumPy
 
-project_type: "mathematics"
+project_type: "mathematical_implementation"
 
 difficulty: "beginner"
 
@@ -28,7 +28,7 @@ technologies:
   - Streamlit
 
 capabilities:
-  - COMPUTE
+  - "EVALUATE"
 
 learning_outcomes:
   - Understand vectors through basic vector operations.
@@ -59,10 +59,10 @@ experiences:
     title: "Vector Operations Explorer"
     description: "Enter two vectors and a scalar to calculate vector addition, scalar multiplication, dot product, norm, and the angle between vectors."
     capabilities:
-      - COMPUTE
+      - EVALUATE
     execution:
       requested: true
-      mode: "local_or_external_demo"
+      mode: "external_demo"
       provider: "Streamlit"
       url: "https://ai-daily-practice-math-vector-operation.streamlit.app/"
 

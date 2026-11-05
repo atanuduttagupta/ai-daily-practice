@@ -1,0 +1,81 @@
+
+schema_version: "1.0"
+
+title: "Document Search Engine using TF-IDF"
+
+domain: "Machine Learning"
+
+topics:
+  - Natural Language Processing
+  - Classical NLP
+  - Bag of Words
+  - Term Frequency
+  - Inverse Document Frequency
+  - TF-IDF
+  - Cosine Similarity
+  - Information Retrieval
+  - Document Search
+  - Stop Word Removal
+  - Scikit-learn
+
+project_type: "machine_learning"
+
+difficulty: "beginner"
+
+status: "completed"
+
+technologies:
+  - Python
+  - NumPy
+  - scikit-learn
+  - Streamlit
+
+capabilities:
+  - SEARCH
+  - EVALUATE
+  - LEARN
+
+learning_outcomes:
+  - Understand how Bag of Words converts text documents into numerical representations.
+  - Implement vocabulary creation and document-term matrices manually.
+  - Understand Term Frequency and Inverse Document Frequency.
+  - Implement smoothed IDF and L2-normalized TF-IDF manually.
+  - Understand and configure stop-word removal.
+  - Calculate cosine similarity between a query and document vectors.
+  - Rank documents based on TF-IDF similarity scores.
+  - Validate manual implementations against scikit-learn.
+  - Build an interactive document search application using Streamlit.
+
+tags:
+  - machine-learning
+  - nlp
+  - classical-nlp
+  - tf-idf
+  - bag-of-words
+  - information-retrieval
+  - document-search
+  - cosine-similarity
+  - stop-word-removal
+  - scikit-learn
+  - streamlit
+  - search-engine
+
+artifacts:
+  github: "https://github.com/atanuduttagupta/ai-daily-practice/tree/main/ML/TF-IDF"
+  documentation: "https://github.com/atanuduttagupta/ai-daily-practice/blob/main/ML/TF-IDF/README.md"
+
+experiences:
+  - id: "interactive-streamlit"
+    title: "TF-IDF Document Search Explorer"
+    description: "Enter a customizable document corpus and search query, configure stop-word removal, inspect Bag-of-Words and TF-IDF calculations, and rank documents using cosine similarity."
+    capabilities:
+      - SEARCH
+      - EVALUATE
+      - LEARN
+    execution:
+      requested: true
+      mode: "external_demo"
+      provider: "Streamlit"
+      url: null
+
+relationships: []
