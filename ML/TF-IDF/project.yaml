@@ -76,6 +76,6 @@ experiences:
       requested: true
       mode: "external_demo"
       provider: "Streamlit"
-      url: null
+      url: "https://ai-daily-practice-ml-tf-idf.streamlit.app/"
 
 relationships: []
