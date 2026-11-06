@@ -1,0 +1,7 @@
+numpy<3,>=2.0
+scikit-learn<2,>=1.6
+streamlit<2,>=1.40
+matplotlib<4,>=3.9
+
+[dev]
+pytest<10,>=9
