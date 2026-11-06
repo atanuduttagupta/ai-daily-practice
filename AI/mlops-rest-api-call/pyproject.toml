@@ -1,0 +1,17 @@
+[project]
+name = "fastapi-prompt-store"
+version = "0.1.0"
+description = "FastAPI Prompt Store backend"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.110.0",
+]
+
+[dependency-groups]
+dev = [
+    "workers-py",
+    "workers-runtime-sdk",
+    "pywrangler",
+    "uvicorn>=0.29.0",
+    "pytest>=8.0.0",
+]

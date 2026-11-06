@@ -1,3 +1,9 @@
 .venv/
 .env
 __pycache__/
+# Cloudflare generated files
+.wrangler/
+python_modules/
+.venv-workers/
+pylock.toml
+

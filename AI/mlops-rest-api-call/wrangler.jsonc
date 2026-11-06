@@ -1,0 +1,7 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fastapi-prompt-store",
+  "main": "worker.py",
+  "compatibility_date": "2026-11-06",
+  "compatibility_flags": ["python_workers"]
+}
