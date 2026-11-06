@@ -1,39 +1,52 @@
+
 import streamlit as st
 import httpx
 
-API_URL = "http://127.0.0.1:8000"
+# Cloudflare-deployed FastAPI backend
+API_BASE_URL = "https://fastapi-prompt-store.atanu-duttagupta.workers.dev"
 
+@st.cache_data(ttl=60)
+def check_backend_health():
+    try:
+        response = httpx.get(
+            f"{API_BASE_URL}/health",
+            timeout=10
+        )
+        return response.status_code == 200
+    except httpx.RequestError:
+        return False
+
+    
 st.set_page_config(
-    page_title="AI Prompt Store",
-    page_icon="🤖",
-    layout="wide"
+    page_title="Prompt Store",
+    page_icon="📝",
+    layout="centered"
 )
 
-st.title("🤖 AI Prompt Store")
-st.caption("A simple Streamlit frontend powered by FastAPI")
+st.title("📝 Prompt Store")
+st.caption("Manage and explore your AI prompts")
 
-# Check backend connection
-try:
-    response = httpx.get(f"{API_URL}/health", timeout=5)
-    response.raise_for_status()
-    st.success("FastAPI backend connected")
-except httpx.RequestError:
-    st.error("Cannot connect to FastAPI. Please start the backend first.")
-    st.stop()
+# Check backend health
+if check_backend_health():
+    st.success("Backend connected")
+else:
+    st.error("Backend is not responding")
+
 
 # Create tabs
 tab1, tab2, tab3, tab4 = st.tabs([
     "Create Prompt",
-    "List Prompts",
+    "View Prompts",
     "Get Prompt",
-    "Estimate Tokens"
+    "Token Estimator"
 ])
+
 
 # 1. Create Prompt
 with tab1:
     st.subheader("Create a new prompt")
 
-    prompt_text = st.text_area("Prompt text", height=150)
+    prompt_text = st.text_area("Prompt text", max_chars=2000)
     temperature = st.slider(
         "Temperature",
         min_value=0.0,
@@ -48,7 +61,7 @@ with tab1:
         else:
             try:
                 response = httpx.post(
-                    f"{API_URL}/prompts",
+                    f"{API_BASE_URL}/prompts",
                     json={
                         "text": prompt_text,
                         "temperature": temperature
@@ -60,17 +73,18 @@ with tab1:
                     st.success("Prompt created successfully!")
                     st.json(response.json())
                 else:
-                    st.error(f"API error: {response.text}")
+                    st.error(f"API Error: {response.text}")
 
-            except httpx.RequestError as error:
-                st.error(f"Connection error: {error}")
+            except httpx.RequestError as e:
+                st.error(f"Connection error: {e}")
 
-# 2. List Prompts
+
+# 2. View Prompts
 with tab2:
     st.subheader("All saved prompts")
 
     limit = st.number_input(
-        "Maximum prompts",
+        "Maximum prompts to display",
         min_value=1,
         max_value=100,
         value=10
@@ -79,30 +93,32 @@ with tab2:
     if st.button("Load Prompts"):
         try:
             response = httpx.get(
-                f"{API_URL}/prompts",
+                f"{API_BASE_URL}/prompts",
                 params={"limit": limit},
                 timeout=10
             )
-            response.raise_for_status()
 
-            prompts = response.json()
+            if response.status_code == 200:
+                prompts = response.json()
 
-            if prompts:
-                st.dataframe(prompts, use_container_width=True)
+                if prompts:
+                    st.dataframe(prompts, use_container_width=True)
+                else:
+                    st.info("No prompts found.")
+
             else:
-                st.info("No prompts found.")
+                st.error(f"API Error: {response.text}")
 
-        except httpx.HTTPStatusError as error:
-            st.error(f"API error: {error.response.text}")
-        except httpx.RequestError as error:
-            st.error(f"Connection error: {error}")
+        except httpx.RequestError as e:
+            st.error(f"Connection error: {e}")
 
-# 3. Get Prompt
+
+# 3. Get Prompt by ID
 with tab3:
     st.subheader("Retrieve a prompt")
 
     prompt_id = st.number_input(
-        "Prompt ID",
+        "Enter Prompt ID",
         min_value=1,
         step=1
     )
@@ -110,7 +126,7 @@ with tab3:
     if st.button("Get Prompt"):
         try:
             response = httpx.get(
-                f"{API_URL}/prompts/{prompt_id}",
+                f"{API_BASE_URL}/prompts/{prompt_id}",
                 timeout=10
             )
 
@@ -119,20 +135,17 @@ with tab3:
             elif response.status_code == 404:
                 st.warning("Prompt not found.")
             else:
-                st.error(f"API error: {response.text}")
+                st.error(f"API Error: {response.text}")
 
-        except httpx.RequestError as error:
-            st.error(f"Connection error: {error}")
+        except httpx.RequestError as e:
+            st.error(f"Connection error: {e}")
 
-# 4. Estimate Tokens
+
+# 4. Token Estimator
 with tab4:
-    st.subheader("Estimate token count")
+    st.subheader("Estimate prompt tokens")
 
-    text_to_estimate = st.text_area(
-        "Enter text",
-        height=150,
-        key="token_text"
-    )
+    text_to_estimate = st.text_area("Enter text to estimate")
 
     if st.button("Estimate Tokens"):
         if not text_to_estimate.strip():
@@ -140,15 +153,20 @@ with tab4:
         else:
             try:
                 response = httpx.post(
-                    f"{API_URL}/estimate-tokens",
+                    f"{API_BASE_URL}/estimate-tokens",
                     json={"text": text_to_estimate},
                     timeout=10
                 )
 
                 if response.status_code == 200:
-                    st.json(response.json())
+                    result = response.json()
+                    st.metric(
+                        "Estimated Tokens",
+                        result["estimated_tokens"]
+                    )
+                    st.write("Characters:", result["characters"])
                 else:
-                    st.error(f"API error: {response.text}")
+                    st.error(f"API Error: {response.text}")
 
-            except httpx.RequestError as error:
-                st.error(f"Connection error: {error}")
+            except httpx.RequestError as e:
+                st.error(f"Connection error: {e}")
