@@ -1,0 +1,698 @@
+K-MEANS & GAUSSIAN MIXTURE MODELS Comprehensive Interview Questions &
+Answers — Editable Text Edition
+===============================================================
+
+This is a plain-text study guide. Add new questions and answers under
+the relevant sections, or create a new numbered section at the end. The
+original interview guide has been retained, with the evaluation-metrics
+section expanded using beginner-friendly explanations, examples,
+interpretation guidance, and project-specific results.
+
+                        K-MEANS & GAUSSIAN
+                          MIXTURE MODELS
+
+                                 Comprehensive Interview Questions & Answers
+
+
+               Unsupervised Learning • Clustering • Model Selection • Practical Scenarios
+
+Aligned to your uploaded K-Means & GMM project This guide follows your
+README and main.py: a reproducible synthetic 2-D dataset with 600
+observations and three overlapping groups; scikit-learn KMeans and
+GaussianMixture; hard-versus-soft assignments; k selection; metrics; and
+a three-panel visualization.
+
+How to study: Answer each question aloud before reading the answer. The
+project-specific section uses the exact example results documented in
+your README. Broader explanations are standard machine-learning
+interview knowledge, clearly separated from project observations.
+
+Contents • 1. Clustering foundations • 2. K-Means algorithm and
+limitations • 3. Gaussian Mixture Models and EM • 4. Choosing the number
+of clusters •5. Evaluation metrics — explained in plain English
+
+First, what is a metric? A metric is simply a measurement that helps us
+judge a model. Clustering has no single perfect score because different
+metrics ask different questions. Some ask whether points are close to
+their own cluster, some ask whether clusters are separated, some compare
+the answer with known labels, and some balance model fit against model
+complexity.
+
+What is inertia? (K-Means) Easy meaning: Imagine every cluster has a
+centre point. Inertia adds up how far every data point is from the
+centre of the cluster it was assigned to. The distances are squared
+before they are added.
+
+How to read it: - Lower inertia means points are, on average, packed
+more closely around their assigned centroids. - Inertia is never
+negative. - Inertia usually becomes smaller when you increase k, because
+more centres give points more nearby places to attach to. - Therefore,
+the lowest inertia alone does NOT tell us the best number of clusters.
+
+Simple example: If k=2 gives inertia 1,000 and k=3 gives inertia 650,
+the k=3 model fits the training points more tightly. But we still need
+to ask whether the extra cluster is meaningful.
+
+Interview answer: “Inertia is the total within-cluster sum of squared
+distances from observations to their assigned K-Means centroids. Lower
+is tighter, but it naturally decreases as k increases.”
+
+What is the Elbow Method? Easy meaning: Try several values of k, such as
+1, 2, 3, 4, 5 and 6. Draw a graph with k on the horizontal axis and
+inertia on the vertical axis. At first, adding a cluster may improve the
+fit a lot. Later, the improvement may become small. The bend where the
+improvement starts slowing down looks like an elbow.
+
+How to read it: Choose a k near the bend if there is a clear bend. It is
+a visual clue, not a mathematical proof. Some datasets do not have a
+clear elbow.
+
+What is Silhouette Score? (K-Means or other clusterings) Easy meaning:
+Silhouette asks two questions about each point: 1. Is this point close
+to the other points in its own cluster? 2. Is it far away from the
+nearest other cluster?
+
+It combines those two answers into one score for each point, then
+averages the scores.
+
+The simple terms: - a = average distance from this point to other points
+in its own cluster. Think: “How far am I from my own group?” - b = the
+smallest average distance from this point to points in any other
+cluster. Think: “How far am I from the closest competing group?” -
+silhouette = (b - a) / max(a, b)
+
+How to read the score: - Close to +1: good placement. The point is much
+closer to its own group than to another. - Around 0: the point is near a
+boundary between groups, or groups overlap. - Below 0: the point may be
+closer to another cluster than to the one it was assigned to.
+
+The overall silhouette score is usually the average across all points: -
+Higher is generally better for compact, well-separated clusters. - The
+theoretical range is -1 to +1. - A high score does not automatically
+mean the clusters are useful for the business problem. - Silhouette can
+favour fewer, compact, well-separated clusters and may not agree with
+other measures.
+
+Tiny example: Suppose a point’s average distance to its own cluster is
+a=2 and its average distance to the nearest other cluster is b=6. Its
+silhouette is (6-2)/6 = 0.67, which is a reasonably good placement.
+
+Interview answer: “Silhouette measures how well each point fits its own
+cluster compared with the nearest alternative cluster. It ranges from -1
+to +1; higher is generally better.”
+
+What is ARI — Adjusted Rand Index? Easy meaning: ARI checks how closely
+our clustering result matches a set of correct/reference group labels,
+when those labels are available. It compares pairs of data points: - Did
+the reference labels put these two points in the same group? - Did our
+clustering also put them in the same group? It checks agreement across
+pairs, and adjusts the result to account for agreement that could happen
+by chance.
+
+A simple analogy: A teacher has the correct grouping of students. You
+group the same students without seeing the answer. ARI measures how
+closely your grouping matches the teacher’s grouping, while allowing for
+some agreement that could happen randomly.
+
+How to read ARI: - +1 means the two groupings match perfectly (cluster
+names/order do not matter). - Around 0 means the agreement is about what
+would be expected by chance. - A negative value means the agreement is
+worse than chance under the ARI adjustment. - It is an external metric:
+it needs reference/true labels. - In real unsupervised problems, true
+labels are often not available. We had them in this project because we
+generated the synthetic data and therefore knew the original groups.
+
+Important: ARI does not tell us whether clusters are compact or well
+separated geometrically. It tells us whether the predicted grouping
+agrees with the reference grouping.
+
+Project example: The README reports K-Means ARI = 0.718 and GMM ARI =
+0.942. In this particular synthetic experiment, GMM’s grouping matched
+the generated reference groups more closely. These are project-run
+results, not universal performance guarantees.
+
+Interview answer: “ARI compares a predicted clustering with known
+reference labels by measuring pairwise agreement and correcting for
+chance. One is a perfect match, around zero is chance-level, and it
+requires reference labels.”
+
+What is BIC — Bayesian Information Criterion? (GMM) Easy meaning: BIC
+helps us compare candidate statistical models while considering two
+things: 1. How well does the model explain the observed data? 2. How
+complicated is the model?
+
+A model can fit the data better simply by adding more components and
+parameters. BIC applies a penalty for complexity so that adding
+components is not rewarded for fit alone.
+
+Think of it like choosing a school project: A very complicated project
+may fit every detail, but it takes more effort and may be overfitting.
+BIC balances “how well it explains the data” against “how complicated it
+is.”
+
+How to read BIC: - When comparing candidate models fitted to the same
+dataset, using comparable likelihood assumptions, a lower BIC is
+preferred. - BIC has no universal good/bad cutoff. The raw number is
+meaningful mainly in comparison with other candidate models on the same
+data. - BIC is not a percentage and is not restricted to 0–1. - It
+penalizes model complexity; adding more components does not
+automatically make BIC better.
+
+Formula: BIC = -2 × log(likelihood) + p × log(n) where: - likelihood =
+how well the fitted model explains the observed data (higher is
+better); - log = natural logarithm; - p = number of estimated model
+parameters; - n = number of observations.
+
+The first term rewards a model that explains the data well. The second
+term penalizes a model with many parameters.
+
+Project example: The README reports that GMM BIC was lowest at k=3 among
+the tested values k=2 through 6. That supported choosing three Gaussian
+components for this synthetic dataset.
+
+Interview answer: “BIC compares model fit while penalizing complexity.
+For candidate GMMs fitted to the same data, lower BIC is generally
+preferred; it helps avoid adding unnecessary components.”
+
+What are AIC and BIC? How are they different? Both compare statistical
+models by balancing fit and complexity. - AIC = -2 × log(likelihood) +
+2p - BIC = -2 × log(likelihood) + p × log(n) Here p is the number of
+estimated parameters and n is the number of observations. BIC’s penalty
+grows with the sample size and is often stronger than AIC’s for
+sufficiently large datasets. They can select different models; neither
+is a universal truth.
+
+What is log-likelihood? Easy meaning: It measures how well a probability
+model says the observed data could have occurred. A higher
+log-likelihood (less negative, when values are negative) means the model
+assigns more probability density to the observed data. But a more
+complicated model can often increase likelihood, which is why AIC and
+BIC add complexity penalties.
+
+What is GMM membership probability / responsibility? Easy meaning: For
+each data point, GMM estimates how likely each Gaussian component is to
+have generated that point, given the fitted model. For example, [0.70,
+0.25, 0.05] means: - Component 1: 70% of the model’s membership
+probability - Component 2: 25% - Component 3: 5% The values for one
+point add up to 1. They are model-based probabilities, not guaranteed
+real-world truths. A point with [0.36, 0.34, 0.30] is much more
+ambiguous than a point with [0.95, 0.03, 0.02].
+
+What does maximum membership probability below 0.9 mean? It means the
+largest of the component probabilities for that point is below 90%. The
+model does not assign that point very strongly to any one component. The
+0.9 threshold is a chosen rule for this project, not a universal
+definition of uncertainty.
+
+Quick metric comparison — what question does each answer?
+
+Metric Plain-English question Needs true labels? Inertia Are points
+close to their assigned centroids? No Silhouette Is each point closer to
+its own group than No to the nearest other group? ARI Does my grouping
+match the known/reference Yes grouping, beyond chance agreement? BIC
+Which GMM balances data fit and model No complexity better? AIC Which
+candidate model balances fit and No complexity under AIC’s penalty?
+
+Why can metrics disagree? They are answering different questions: -
+Silhouette judges geometric closeness and separation. - ARI checks
+agreement with known/reference labels. - BIC compares probabilistic
+model fit while penalizing complexity. - Inertia measures closeness to
+K-Means centroids and always tends to fall as k grows.
+
+Your project demonstrates this clearly: - K-Means: ARI 0.718; silhouette
+0.614. - GMM: ARI 0.942; silhouette 0.612. - For candidate k, silhouette
+preferred k=2 (0.659), while GMM BIC was lowest at k=3. This is not a
+contradiction. The measures evaluate different properties. Interpret
+them together with plots, stability and the actual purpose of
+clustering.
+
+A practical rule for interviews: Never say “the highest metric always
+wins” without naming the metric and explaining what it measures. Say
+which question the metric answers, whether it needs labels, and what its
+limitations are.
+
+6.  Practical considerations • 7. Questions about your project • 8.
+    Scenario-based and advanced questions • 9. Formula sheet and quick
+    revision
+
+K-Means & GMM | Interview Study Guide Page 1  1. Clustering foundations
+What is clustering? Clustering is an unsupervised learning task that
+groups observations so that points within a group are more similar to
+one another than to points in other groups, under a chosen
+representation and similarity measure.
+
+Why is clustering unsupervised? The model is not trained with a target
+label for every observation. It discovers structure from input features.
+Labels may be available later for evaluation, but they are not used to
+fit the clustering model.
+
+What are common applications? Customer segmentation, document and
+embedding grouping, image segmentation, product grouping, data
+exploration, near-duplicate detection and anomaly exploration.
+
+How does clustering differ from classification? Classification is
+supervised and predicts known labels learned from labelled examples.
+Clustering is unsupervised and discovers groups. A cluster ID is not
+automatically a meaningful business category.
+
+What does a cluster represent? A group coherent under the chosen
+features, scaling, distance measure and algorithm. It is not necessarily
+a naturally occurring or objectively correct category; usefulness
+depends on the application.
+
+What is hard versus soft clustering? Hard clustering assigns each point
+to one cluster. Soft clustering gives a degree or probability of
+membership in each cluster. K-Means is hard; a GMM can provide soft
+membership probabilities.
+
+Do cluster numbers have inherent meaning? No. IDs such as 0, 1 and 2 are
+arbitrary. Different runs can find equivalent partitions but number them
+differently. Compare memberships or cluster profiles, not raw IDs.
+
+2.  K-Means algorithm and limitations Explain K-Means. Choose k and
+    initialize k centroids. Assign each observation to its nearest
+    centroid. Recalculate each centroid as the mean of its assigned
+    observations. Repeat assignment and update until convergence or a
+    stopping limit.
+
+What objective does K-Means minimize? Within-cluster sum of squared
+distances, called inertia: Σⱼ Σₓ∈Cⱼ ||x − μⱼ||². Here Cⱼ is a cluster
+and μⱼ its centroid. Lower training inertia means points are closer to
+their assigned centroids, but does not prove the clustering is useful.
+
+Why is the centroid the mean? For squared Euclidean distance, the
+arithmetic mean minimizes the sum of squared distances from the
+observations in a cluster. That is why the update step uses the mean.
+
+What is the role of k? It is the number of clusters requested. Standard
+K-Means does not infer k automatically; the practitioner must select it
+or compare candidate values.
+
+What shapes does K-Means handle best? It tends to work best for compact,
+roughly spherical or convex clusters with broadly comparable scale and
+density under Euclidean distance. It can struggle with elongated,
+overlapping, non-convex or very unequal groups.
+
+Why is feature scaling important? K-Means commonly uses Euclidean
+distance. Features with larger numeric ranges can dominate distance
+calculations. Scaling can prevent units or magnitudes from overwhelming
+other features.
+
+What is K-Means++? An initialization method that spreads initial
+centroids out rather than choosing them completely at random. It often
+improves convergence and solution quality but does not guarantee the
+global optimum.
+
+K-Means & GMM | Interview Study Guide Page 2  Why use n_init greater
+than one? Different initial centroids can lead to different local
+solutions. Multiple initializations reduce sensitivity to a poor
+starting point. Your project uses n_init=10 for K-Means.
+
+Does K-Means find the global optimum? Not necessarily. Its
+assignment/update procedure converges to a local optimum or stationary
+solution, not guaranteed to the globally best partition.
+
+What happens if k is too small or too large? Too small can merge
+distinct groups. Too large can fragment groups or model noise as
+separate clusters. Inertia generally decreases as k increases, so it
+cannot select k by itself.
+
+How does K-Means handle outliers? It can be sensitive because centroids
+are means and the objective squares distances. Extreme observations can
+pull centroids away from dense regions. Consider robust preprocessing or
+another method.
+
+What are K-Means’ advantages? It is simple, efficient for many datasets,
+easy to implement and interpret, and provides useful centroids. It is a
+good baseline.
+
+What are its limitations? It requires k, is sensitive to scaling and
+initialization, can be affected by outliers, favours compact Euclidean
+clusters and does not provide membership probabilities.
+
+3.  Gaussian Mixture Models and EM What is a Gaussian Mixture Model? A
+    GMM represents a data distribution as a weighted sum of k Gaussian
+    components. Each component has a mean, covariance matrix and mixture
+    weight. A point can have a probability of belonging to each
+    component.
+
+What are the parameters of a GMM? Each component has a mean vector μₖ,
+covariance matrix Σₖ and mixing coefficient πₖ. Weights are non-negative
+and sum to one.
+
+Write the GMM density. p(x) = Σₖ πₖ (x | μₖ, Σₖ). Each Gaussian
+contributes a density weighted by its mixture coefficient.
+
+What is Expectation-Maximization? EM iteratively estimates parameters
+when the model includes latent or unobserved variables. For a GMM, the
+hidden variable is component membership. EM alternates between
+estimating memberships and updating component parameters.
+
+Explain the E-step. The E-step computes each responsibility rᵢₖ: the
+posterior probability that component k generated observation i, given
+current parameters. Responsibilities for a point sum to one.
+
+Explain the M-step. The M-step updates mixture weights, means and
+covariance matrices using responsibilities as fractional membership
+weights.
+
+Why is GMM soft clustering? Because predict_proba returns a probability
+distribution over components for each observation. For example, a point
+might have [0.70, 0.25, 0.05] membership probabilities.
+
+How can GMM model elliptical clusters? A component’s covariance matrix
+controls spread, orientation and correlations between dimensions. Full
+covariance can represent a tilted ellipse in 2-D.
+
+What does covariance_type control? full: each component has its own
+unrestricted covariance. tied: all components share one full covariance.
+diag: each has a diagonal covariance. spherical: each has one variance
+value shared across dimensions.
+
+predict versus predict_proba?
+
+K-Means & GMM | Interview Study Guide Page 3  predict returns the most
+likely component label. predict_proba returns the full posterior
+probability vector over components.
+
+Can GMM converge to a local optimum? Yes. EM can converge to a local
+optimum or degenerate solution. Initialization, covariance constraints,
+regularization and multiple initializations matter.
+
+What is reg_covar? A non-negative value added to the covariance diagonal
+to help keep covariance matrices positive definite and reduce numerical
+instability.
+
+What are GMM’s strengths? It provides probabilistic memberships and can
+model overlapping groups and a wider range of cluster shapes, sizes and
+orientations.
+
+What are GMM’s limitations? It assumes a Gaussian-mixture
+representation, requires model selection for component count, can be
+initialization-sensitive and may be more computationally demanding than
+K-Means.
+
+When prefer GMM over K-Means? When clusters overlap, are elliptical or
+have different covariance structures, or membership uncertainty is
+useful. Validate that a Gaussian-mixture assumption is reasonable.
+
+4.  Choosing the number of clusters Why is choosing k difficult? There
+    may be no single objectively correct number. Criteria measure
+    different aspects of fit, separation and complexity. The choice
+    should also make sense for the downstream task.
+
+What is the elbow method? Fit K-Means for several k values and plot
+inertia. Look for the point where additional clusters produce a smaller
+improvement. The elbow can be subjective or absent.
+
+Why does inertia decrease as k increases? More centroids give the model
+more flexibility to assign points closer to a centroid. With one
+centroid per observation, inertia can reach zero. Complexity must be
+considered.
+
+What is silhouette score? For a point, let a be its average distance to
+points in its own cluster and b the lowest average distance to points in
+another cluster. Its score is (b − a) / max(a,b), ranging from -1 to 1.
+Higher generally indicates better cohesion and separation.
+
+What does a negative silhouette suggest? The point may be closer on
+average to another cluster than to its assigned cluster. It can indicate
+a questionable assignment or overlap.
+
+What are silhouette’s limitations? It favours compact, well-separated
+clusters, can under-reward complex structures, can be expensive on large
+data and depends on representation and distance metric.
+
+What are AIC and BIC? Information criteria balance model fit with model
+complexity. For GMM selection they use likelihood and penalize the
+number of estimated parameters. Lower is preferred among comparable
+models fitted to the same data.
+
+What is the BIC formula? A common form is BIC = −2 log(L) + p log(n),
+where L is maximized likelihood, p the number of estimated parameters
+and n the number of observations. Lower BIC is preferred.
+
+Why can silhouette and BIC disagree? They optimize different criteria.
+Silhouette measures geometric cohesion and separation; BIC evaluates
+probabilistic fit with a complexity penalty. Disagreement is not
+necessarily an error.
+
+How do you select k in practice?
+
+K-Means & GMM | Interview Study Guide Page 4  Compare complementary
+metrics, inspect plots and cluster sizes, assess stability across seeds
+or samples, and determine whether groups are useful. Do not rely on one
+metric.
+
+5.  Evaluation metrics What is Adjusted Rand Index (ARI)? ARI compares
+    two partitions, such as predicted clusters and known ground-truth
+    labels, while adjusting for agreement expected by chance. It is 1
+    for identical partitions, around 0 for chance-level agreement, and
+    can be negative.
+
+Does ARI require true labels? Yes. It is an external metric. In real
+unlabeled clustering tasks, true labels may not exist, so ARI cannot be
+computed directly.
+
+Can ARI compare partitions with different numeric cluster IDs? Yes. ARI
+is invariant to permutations of cluster identifiers and compares
+pairwise grouping relationships.
+
+Silhouette versus ARI? Silhouette is internal: it uses feature distances
+and predicted clusters without ground-truth labels. ARI is external: it
+measures agreement with a reference partition.
+
+Why can two models have similar silhouette but different ARI? Silhouette
+measures geometry, not whether groups match the known semantic or
+generated labels. Different partitions can have similar geometry scores
+but different agreement with truth.
+
+Should the highest metric always win? No. Metrics are proxies and encode
+assumptions. Consider stability, interpretability, domain usefulness,
+downstream performance and error costs.
+
+6.  Practical considerations Why preprocess before clustering? Inspect
+    data quality, missing values, outliers, units, feature relevance and
+    representation. Encode categorical variables appropriately and scale
+    where model assumptions require it.
+
+Should every feature be standardized? No. Scaling is often important for
+Euclidean K-Means, but depends on feature meaning. For GMM, scaling also
+affects covariance estimation. Avoid blindly scaling features without
+considering consequences.
+
+What happens in high dimensions? Distances can become less
+discriminative and GMM covariance estimation becomes harder as parameter
+counts grow. Feature selection, dimensionality reduction and
+regularization may help.
+
+How do you assess clustering stability? Repeat fits with different
+seeds, bootstrap or subsample data, and compare partitions using metrics
+such as ARI when suitable.
+
+What if a K-Means cluster is empty? An empty cluster can occur after
+assignment. Implementations handle this with reinitialization or
+safeguards. Inspect resulting cluster sizes rather than assuming all
+requested clusters are meaningful.
+
+How can clustering help anomaly detection? Points far from centroids or
+with low likelihood under a fitted mixture may be unusual. Clustering is
+not automatically an anomaly detector; thresholds and evaluation must
+fit the task.
+
+What is a K-Means centroid? The arithmetic mean of observations assigned
+to a cluster. It may not be an actual observation and can be difficult
+to interpret in transformed feature spaces.
+
+Can a GMM assign a point to multiple clusters?
+
+K-Means & GMM | Interview Study Guide Page 5  It can give non-zero
+posterior probability to multiple components. A downstream system may
+choose the maximum-probability component but can preserve the full
+probability vector to represent uncertainty.
+
+7.  Questions about your project What does your project demonstrate? It
+    generates reproducible synthetic 2-D data and clusters it with
+    scikit-learn KMeans and GaussianMixture. It compares scores,
+    examines soft assignments, evaluates candidate k values and saves a
+    three-panel plot.
+
+How is the dataset generated? The code uses make_blobs with 600 samples,
+three centres, cluster_std=[1.6, 3.2, 1.0] and random_state=42. It then
+applies a 2-by-2 linear transformation to stretch and rotate the
+geometry.
+
+Why use a fixed random seed? It makes the synthetic data and randomized
+initialization reproducible, helping compare results across runs. It
+does not prove generalization to real data.
+
+Which libraries are used? NumPy, scikit-learn and Matplotlib. The
+requirements file lists scikit-learn>=1.3.0, matplotlib>=3.7.0 and
+numpy>=1.26.0.
+
+What K-Means configuration is used? KMeans(n_clusters=3, n_init=10,
+random_state=42).
+
+What GMM configuration is used? GaussianMixture(n_components=3,
+covariance_type=‘full’, n_init=5, random_state=42).
+
+What does the comparison print? Adjusted Rand Index against the known
+synthetic labels and silhouette score for each model. ARI uses the
+generated labels; silhouette does not.
+
+What results does the README report? K-Means: ARI 0.718 and silhouette
+0.614. GMM: ARI 0.942 and silhouette 0.612. In this designed synthetic
+experiment GMM matched the generated groups better by ARI, while
+silhouette was almost identical.
+
+Why is the similar silhouette result important? It shows that an
+internal geometric metric may not reveal which partition best matches
+known generated groups. Silhouette and ARI answer different questions.
+
+What does the soft-assignment experiment do? It calls
+gmm.predict_proba(X), finds the three observations with the smallest
+maximum probability, prints their probability vectors and K-Means
+labels, and counts observations whose maximum GMM probability is below
+0.9.
+
+What did the README report about uncertain points? 14 of 600 points had
+a maximum GMM membership probability below 0.9 in the documented run.
+This is not a universal property of GMM.
+
+How does the project compare k values? It evaluates k=2 through 6. For
+each k it fits K-Means and GMM, prints inertia and silhouette for
+K-Means, records GMM BIC, and reports the k with the lowest BIC.
+
+What did the README report about selecting k? BIC was lowest at k=3,
+matching the number of generated groups. Silhouette scored k=2 highest
+at 0.659, compared with 0.614 at k=3.
+
+What is in clusters.png? Three scatter plots: true generated groups,
+K-Means assignments and GMM assignments. The K-Means plot also shows
+centroids as red x markers.
+
+Why does the README warn about synthetic data? The data was deliberately
+designed with overlap and stretching to show where K-Means struggles.
+Real data may behave differently, and true labels for ARI are often
+unavailable.
+
+K-Means & GMM | Interview Study Guide Page 6  What follow-up experiments
+does the README suggest? Change cluster spreads or undo stretching; try
+covariance_type=‘spherical’; standardize with StandardScaler; cluster
+sklearn digits with k=10 and score with ARI; and try MiniBatchKMeans for
+large datasets.
+
+Important: These numeric results are the README’s documented example
+run. The code calculates metrics when executed; results can vary if the
+dataset or configuration changes.
+
+8.  Scenario-based and advanced questions You have elongated clusters.
+    What would you try? Compare K-Means with a GMM using an appropriate
+    covariance structure, such as full covariance. Inspect geometry and
+    validate with multiple criteria; full-covariance GMM is not
+    guaranteed to be correct.
+
+Your clusters have very different sizes and variances. What would you
+consider? GMM may be a stronger candidate because each component can
+have its own covariance. Compare covariance types and assess stability
+and fit.
+
+Inertia decreases as k increases. Does that prove larger k is better?
+No. This is expected. Use elbow, silhouette, stability, domain
+usefulness or other suitable criteria to balance fit and complexity.
+
+Silhouette prefers k=2 but BIC prefers k=3. What do you do? Explain that
+they measure different things. Inspect geometry, compare stability and
+evaluate task usefulness rather than declaring one metric universally
+correct.
+
+A GMM returns probabilities 0.36, 0.34 and 0.30. What does that mean?
+The model is uncertain about component membership. The first is the most
+likely label, but the small probability differences should be preserved
+if uncertainty matters.
+
+K-Means changes significantly across seeds. What would you do? Increase
+n_init, inspect overlap and assumptions, scale appropriately, assess
+stability and consider another algorithm if K-Means geometry is
+unsuitable.
+
+A GMM covariance estimate is unstable. What can help? Use reg_covar,
+inspect duplicate or collinear features, consider a simpler
+covariance_type, scale sensibly and check whether sample size supports
+the parameter count.
+
+You have millions of observations. What alternative may help?
+MiniBatchKMeans updates centroids from small batches and can scale
+better than standard batch K-Means. Validate whether its approximation
+is adequate.
+
+A stakeholder asks what Cluster 0 means. What do you say? Cluster IDs
+are arbitrary. Profile members using original business features,
+identify distinguishing characteristics and assign a descriptive name
+only after validating usefulness and stability.
+
+When might you reject clustering? If there is no meaningful group
+structure, features do not represent the task, clusters are unstable or
+not actionable, or a supervised or rule-based approach better fits the
+objective.
+
+How is K-Means used in vector search? K-Means can group embedding
+vectors into coarse clusters or centroids. IVF-style indexes use those
+groups to narrow the search region instead of comparing every vector.
+
+What is vector quantization? K-Means centroids can form a codebook. A
+vector can be represented by the index of its nearest centroid,
+supporting compression. Your README connects this idea to VQ-VAE
+codebooks.
+
+9.  Formula sheet and quick revision K-Means inertia Σⱼ Σₓ∈Cⱼ ||x −
+    μⱼ||². K-Means alternates nearest-centroid assignment and
+    mean-centroid updates.
+
+K-Means & GMM | Interview Study Guide Page 7  GMM density p(x) = Σₖ πₖ
+(x | μₖ, Σₖ), where πₖ ≥ 0 and Σₖ πₖ = 1.
+
+Silhouette s = (b − a) / max(a,b), where a is average within-cluster
+distance and b is the lowest average distance to another cluster. Range:
+−1 to 1.
+
+BIC BIC = −2 log(L) + p log(n). Lower is preferred among comparable
+candidate models.
+
+ARI External agreement between two partitions, adjusted for chance. 1
+means identical partitions; around 0 indicates chance-level agreement.
+
+Fast comparison Aspect K-Means GMM
+
+Assignment Hard: one cluster per point Soft probabilities; predict gives
+most likely component
+
+Shape Compact Euclidean groups Gaussian components; covariance controls
+shape
+
+Fitting Minimize within-cluster squared distances Maximum likelihood via
+EM
+
+Choose k Elbow, silhouette, stability, usefulness BIC/AIC, silhouette,
+stability, usefulness
+
+Typical weakness Elongated / unequal groups Gaussian assumption, local
+optima, more parameters
+
+Five interview-ready statements • “K-Means produces hard assignments by
+minimizing within-cluster squared Euclidean distances.” • “A GMM models
+data as a weighted mixture of Gaussian components and estimates
+parameters using EM.” • “GMM posterior probabilities expose uncertainty
+that a single hard label hides.” • “Inertia always falls as k grows, so
+I use multiple criteria and domain usefulness to select k.” • “In my
+synthetic experiment, GMM achieved higher ARI than K-Means, while
+similar silhouette scores showed why metrics need careful
+interpretation.”
+
+Oral practice checklist • Explain K-Means without notes and draw its
+assignment/update loop. • Explain the GMM E-step and M-step. • Interpret
+a membership probability vector. • Compare silhouette, ARI and BIC. •
+Defend why your synthetic project results should not be generalized to
+all real datasets.
+
+K-Means & GMM | Interview Study Guide Page 8 
