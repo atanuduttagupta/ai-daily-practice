@@ -6,4 +6,5 @@ __pycache__/
 python_modules/
 .venv-workers/
 pylock.toml
+.venv1/
 
