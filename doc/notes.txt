@@ -1,0 +1,152 @@
+python -m streamlit run app.py --server.runOnSave true
+
+
+deactivate
+Remove-Item -Recurse -Force .venv
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python --version
+python -m pip install --upgrade pip
+pip install -r requirements.txt or python -m pip install -e ".[dev]"
+
+python -m pip install -e ".[dev]" --upgrade
+
+
+
+python -m validator.validate projects/agentic-ai/agentic-001/project.yaml schemas/project.schema.json
+python -m pytest tests/test_importer.py -v
+python -m importer.import_project projects/agentic-ai/agentic-001/project.yaml schemas/project.schema.json
+
+or
+
+ python -m pytest
+
+added to catalogue/catalogue.yaml
+  - key: "mlops"
+    name: "MLOps"
+    code: "MLOPS"
+    display_order: 9
+    projects:
+      - id: "mlops-001"
+        catalogue_reference: "MLOPS-001"
+        display_order: 1
+
+python -m pytest tests/test_catalogue.py -v
+
+python -m pytest -v
+
+run local
+
+backend ->
+
+python -m uvicorn website.backend.app:app --reload --port 8000
+check http://127.0.0.1:8000/api/projects?utm_source=chatgpt.com
+
+front end ->
+
+http://127.0.0.1:8000/website/
+or
+
+python -m http.server 5501 --directory website
+
+
+streamlit local
+python -m streamlit run frontend/app.py --server.runOnSave true
+python -m streamlit run app.py --server.runOnSave true
+python -m streamlit run frontend/app.py
+
+
+deactivate
+Remove-Item -Recurse -Force .venv1
+py -3.11 -m venv .venv1 
+.\.venv1\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+python -m streamlit run app.py --server.runOnSave true
+
+
+
+-- AI Library list
+
+Give me next small case study project on real world  business problem from AI in the topics either AI, Agentic AI, Graph  . Provide me all deliverables in downloadable format so that I can work on it. Include some fundamental theory about the topic in README.md. Do not include past projects in the deliverables, give only three files - main.py, requirement.txt, and README.md in downloadable format.   Try to be within your daily free tokens. use modern DL, AI, Agentic AI, Graph libraries wherever possible instead of traditional long codes.
+
+Below are framework, tools and libraries you need to use from.
+
+1. Core Foundation Model & Inference LibrariesThe underlying engines and interfaces for loading, running, and serving LLMs and multimodal models.Model Hubs & Local Runtimes: Hugging Face (transformers, diffusers), Ollama, llama.cpp, LM Studio, ExecuTorch.   High-Throughput Production Serving: vLLM, SGLang, NVIDIA TensorRT-LLM, Text Generation Inference (TGI), BentoML.Unified Model Gateways & Routers: LiteLLM, OpenRouter, Portkey, Helicone, Kong AI Gateway.2. RAG, Data Ingestion & RetrievalTools for parsing unstructured documents, chunking, embedding, and running vector or graph retrieval.RAG & Orchestration Frameworks: LlamaIndex, Haystack, LangChain, DSPy (programmatic prompt/pipeline optimization), RAGFlow, LightRAG (graph-enhanced RAG).   Document Parsing & Ingestion: Unstructured, Docling (IBM), MarkItDown (Microsoft), LlamaParse, Marker, Crawl4AI, Firecrawl.Vector Libraries, Databases & Hybrid Search: FAISS (Meta's embedded in-memory/GPU similarity search library), Qdrant, Weaviate, Milvus, Pinecone, Chroma, pgvector (PostgreSQL), LanceDB.Graph Databases (GraphRAG): Neo4j, Memgraph, FalkorDB.3. Agentic Frameworks & Multi-Agent OrchestrationFrameworks for building stateful, tool-using, and multi-agent workflows.Code-First Agent Frameworks: LangGraph, PydanticAI, CrewAI, LlamaIndex Workflows, Agno (formerly Phidata), Smolagents (Hugging Face).   Enterprise & TypeScript Stacks: Microsoft Agent Framework (unified successor to AutoGen + Semantic Kernel), Mastra (TypeScript), Vercel AI SDK.Provider-Native Agent SDKs: OpenAI Agents SDK, Anthropic Claude Agent SDK, Google Agent Development Kit (ADK), AWS Strands Agents.   Durable Execution & Agent Runtimes: Temporal, Restate, Inngest, LangGraph Platform.4. Protocols, Tool Use & Sandboxed ExecutionStandards and infrastructure for connecting models to external tools, APIs, and secure code environments.Interoperability Protocols: Model Context Protocol (MCP) (Anthropic — tool/context standardization), Agent2Agent Protocol (A2A) (Google — inter-agent communication).Secure Code Sandboxes: E2B, Modal, Daytona, Docker Sandboxes.Browser & Computer Use Automation: Browserbase, Stagehand, Playwright, Steel.5. Structured Outputs & Prompt EngineeringLibraries ensuring LLMs adhere strictly to schemas, types, and grammars in production.Schema & Constrained Decoding: Instructor, Outlines, Guidance, BAML (BoundaryML), Guardrails AI.6. Guardrails, Safety & SecurityProduction defense layers for prompt injection, PII redaction, toxicity, and policy enforcement.Input/Output Guardrails: NVIDIA NeMo Guardrails, Llama Guard, Lakera Guard, Guardrails AI.PII & Data Privacy: Microsoft Presidio, Private AI.7. LLMOps, Evaluation & ObservabilityTracing, latency/cost monitoring, regression testing, and automated evaluation pipelines.Tracing & Observability: Langfuse, Arize Phoenix, LangSmith, Helicone, Braintrust, Traceloop (OpenLLMetry).Automated Evaluation & Testing: RAGAS, DeepEval, Promptfoo, TruLens, Giskard.8. Multimodal AI (Voice, Vision & Media)Production libraries and engines for real-time audio, speech, and visual generation/understanding.Voice & Real-Time Audio Agents: Pipecat, LiveKit Agents, Whisper / Faster-Whisper (STT), Deepgram, ElevenLabs, Kokoro / Cartesia (TTS).   Vision & Media Generation: ComfyUI, Diffusers, Ultralytics (YOLO), Supervision (Roboflow).9. Visual, Low-Code & UI BuildersWorkflow builders and frontend kits for rapid deployment and human-in-the-loop interfaces.Visual Workflow Builders: n8n, Dify, Flowise, Langflow.   AI Frontend & Generative UI: CopilotKit, Vercel AI SDK UI, Assistant UI, Chainlit, Gradio, Streamlit.
+
+-- ML Library list
+
+
+1. Data Processing, Feature Engineering & Versioning
+Tools for high-speed data manipulation, training-serving feature consistency, and dataset lineage.
+
+Dataframes & Distributed Compute: Polars (fast Rust-based DataFrame library), DuckDB (in-process analytical SQL), PySpark, Dask, Ray Data.
+
+Feature Stores: Feast (open-source), Tecton, Hopsworks, Databricks Feature Store.
+
+Data Versioning & Quality: DVC (Data Version Control), LakeFS, Great Expectations, Pandera, Soda.
+
+2. Core Modeling & Training Frameworks
+The foundational libraries used to build and train classical, deep learning, and tabular models.
+
+Classical & Tabular ML: Scikit-Learn, XGBoost, LightGBM, CatBoost, TabPFN (foundation model for tabular data).
+
+Deep Learning & Tensor Frameworks: PyTorch (industry standard), JAX (high-performance XLA computing), Keras 3 (multi-backend), PyTorch Lightning.
+
+Distributed Training & Scaling: Ray Train, DeepSpeed, PyTorch FSDP (Fully Sharded Data Parallel), Horovod.
+
+Fine-Tuning & Parameter-Efficient Adaptation: Hugging Face PEFT, Axolotl, Unsloth, Torchtune.
+
+3. Hyperparameter Optimization & Experiment Tracking
+Libraries for automated parameter search, experiment logging, and model registry management.
+
+Hyperparameter Tuning: Optuna, Ray Tune, Hyperopt.
+
+Experiment Tracking & Model Registry: MLflow, Weights & Biases (W&B), Comet ML, Neptune.ai, ClearML.
+
+4. Model Optimization, Serialization & Runtimes
+Tools for compressing, quantizing, compiling, and accelerating models for low-latency production.
+
+Serialization & Interoperability: ONNX (Open Neural Network Exchange), Safetensors.
+
+Compilers & Inference Accelerators: NVIDIA TensorRT, ONNX Runtime, OpenVINO (Intel), Apache TVM, torch.compile.
+
+Quantization & Compression: BitsAndBytes, AutoGPTQ, AutoAWQ, Intel Neural Compressor.
+
+5. Model Serving & Inference Engines
+Production infrastructure for deploying models as scalable REST/gRPC microservices or batch pipelines.
+
+Multi-Framework & Classical ML Serving: NVIDIA Triton Inference Server, BentoML, KServe, Ray Serve, TorchServe, Seldon Core.
+
+High-Throughput Foundation Model Serving: vLLM, SGLang, Text Generation Inference (TGI), llama.cpp.
+
+Lightweight Python API Wrappers: FastAPI, LitServe.
+
+6. Workflow Orchestration & ML Pipelines
+Schedulers and DAG engines for automating training, retraining, feature pipelines, and batch scoring.
+
+ML-Native Orchestrators: Metaflow, ZenML, Flyte, Kubeflow Pipelines.
+
+General Data & Compute Orchestrators: Apache Airflow, Prefect, Dagster.
+
+7. ML Observability, Drift Monitoring & Explainability
+Post-deployment monitoring for data drift, concept drift, silent model degradation, and interpretability.
+
+Drift & Performance Monitoring: Evidently AI, Arize AI, WhyLabs, Fiddler AI, NannyML (estimates performance without ground truth labels).
+
+Model Explainability (XAI): SHAP, LIME, Captum (PyTorch interpretability).
+
+8. Managed End-to-End Cloud ML Platforms
+Enterprise platforms bundling compute clusters, notebooks, feature stores, registries, and endpoints.
+
+Hyperscalers: AWS SageMaker, Google Cloud Vertex AI, Azure Machine Learning.
+
+Unified Lakehouse + ML Platforms: Databricks Mosaic AI, Snowflake ML.
+
+9. Visual, AutoML & Low-Code ML Builders
+Tools for automated feature engineering, model ensembling, and visual pipeline construction.
+
+Open-Source AutoML: AutoGluon (AWS — benchmark leader for tabular/multimodal AutoML), FLAML (Microsoft), PyCaret, H2O.ai.
+
+Visual & Enterprise Platforms: Dataiku, KNIME, Altair RapidMiner.
